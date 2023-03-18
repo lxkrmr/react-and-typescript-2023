@@ -1,4 +1,5 @@
 import { Project } from "./Project";
+import { useState } from "react";
 import ProjectCard from "./ProjectCard";
 import ProjectForm from "./ProjectForm";
 
@@ -7,13 +8,15 @@ interface ProjectListProps {
 }
 
 function ProjectList({ projects }: ProjectListProps) {
+  const [projectBeingEdited, setProjectBeingEdited] = useState({});
+
   const handleEdit = (project: Project) => {
-    console.log(project);
+    setProjectBeingEdited(project);
   };
   const renderedProjects = projects.map((project) => (
     <div>
       <ProjectCard project={project} onEdit={handleEdit} />
-      <ProjectForm />
+      {projectBeingEdited === project && <ProjectForm />}
     </div>
   ));
 
