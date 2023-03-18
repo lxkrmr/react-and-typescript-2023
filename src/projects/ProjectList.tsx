@@ -1,5 +1,6 @@
 import { Project } from "./Project";
 import ProjectCard from "./ProjectCard";
+import ProjectForm from "./ProjectForm";
 
 interface ProjectListProps {
   projects: Project[];
@@ -7,7 +8,10 @@ interface ProjectListProps {
 
 function ProjectList({ projects }: ProjectListProps) {
   const renderedProjects = projects.map((project) => (
-    <ProjectCard project={project} />
+    <div>
+      <ProjectCard project={project} />
+      <ProjectForm />
+    </div>
   ));
 
   return <div className="row">{renderedProjects}</div>;
