@@ -9,6 +9,8 @@ function formatDescription(description: string): string {
 }
 
 function ProjectCard({ project }: ProjectCardProps) {
+  const handleEditClick = (project: Project) => console.log(project);
+
   return (
     // in the tutorial the surounding div is not included in ProjectCard instead it is defined in ProjectList
     <div key={project.id} className="cols-sm">
@@ -20,6 +22,10 @@ function ProjectCard({ project }: ProjectCardProps) {
           </h5>
           <p>{formatDescription(project.description)}</p>
           <p>Budget : {project.budget.toLocaleString()}</p>
+          <button onClick={() => handleEditClick(project)} className="bordered">
+            <span className="icon-edit"></span>
+            Edit
+          </button>
         </section>
       </div>
     </div>
