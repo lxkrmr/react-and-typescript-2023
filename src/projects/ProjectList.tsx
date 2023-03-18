@@ -7,9 +7,12 @@ interface ProjectListProps {
 }
 
 function ProjectList({ projects }: ProjectListProps) {
+  const handleEdit = (project: Project) => {
+    console.log(project);
+  };
   const renderedProjects = projects.map((project) => (
     <div>
-      <ProjectCard project={project} />
+      <ProjectCard project={project} onEdit={handleEdit} />
       <ProjectForm />
     </div>
   ));

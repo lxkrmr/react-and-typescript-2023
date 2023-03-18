@@ -2,14 +2,15 @@ import { Project } from "./Project";
 
 interface ProjectCardProps {
   project: Project;
+  onEdit: (project: Project) => void;
 }
 
 function formatDescription(description: string): string {
   return description.substring(0, 60) + "...";
 }
 
-function ProjectCard({ project }: ProjectCardProps) {
-  const handleEditClick = (project: Project) => console.log(project);
+function ProjectCard({ project, onEdit }: ProjectCardProps) {
+  const handleEditClick = onEdit;
 
   return (
     // in the tutorial the surounding div is not included in ProjectCard instead it is defined in ProjectList
