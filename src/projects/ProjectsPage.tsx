@@ -1,5 +1,14 @@
+import { MOCK_PROJECTS } from "./MockProjetcs";
+
 function ProjectsPage() {
-  return <h1>Projects</h1>;
+  const projects = JSON.stringify(MOCK_PROJECTS, null, " ");
+
+  return (
+    <>
+      <h1>Projects</h1>
+      <pre>{projects}</pre>
+    </>
+  );
 }
 
 export default ProjectsPage;
