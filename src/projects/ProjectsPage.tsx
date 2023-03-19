@@ -8,13 +8,18 @@ function ProjectsPage() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | undefined>(undefined);
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     async function loadProjects() {
       try {
         setLoading(true);
-        const projects = await projectAPI.get();
-        setProjects(projects);
+        const projects = await projectAPI.get(currentPage, 1);
+        if (currentPage === 1) {
+          setProjects(projects);
+        } else {
+          setProjects((curr) => [...curr, ...projects]);
+        }
       } catch (err) {
         if (err instanceof Error) {
           setError(err.message);
@@ -24,7 +29,7 @@ function ProjectsPage() {
       }
     }
     loadProjects();
-  }, []);
+  }, [currentPage]);
 
   const saveProject = (project: Project) => {
     const updatedProjects = projects.map((curr) =>
@@ -32,6 +37,10 @@ function ProjectsPage() {
     );
 
     setProjects(updatedProjects);
+  };
+
+  const handleMoreClick = () => {
+    setCurrentPage((curr) => curr + 1);
   };
 
   return (
@@ -52,6 +61,18 @@ function ProjectsPage() {
       )}
 
       <ProjectList projects={projects} onSave={saveProject} />
+
+      {!loading && !error && (
+        <div className="row">
+          <div className="col-sm-12">
+            <div className="button-group fluid">
+              <button className="button default" onClick={handleMoreClick}>
+                More...
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {loading && (
         <div className="center-page">
