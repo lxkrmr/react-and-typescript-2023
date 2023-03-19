@@ -9,16 +9,27 @@ interface ProjectFormProps {
 
 type InputType = "checkbox" | "number" | "string";
 
+class Errors {
+  constructor(
+    public name: string = "",
+    public description: string = "",
+    public budget: string = ""
+  ) {}
+}
+
 function ProjectForm({
   project: initialProject,
   onChancel,
   onSave,
 }: ProjectFormProps) {
   const [project, setProject] = useState(initialProject);
+  const [errors, setErrors] = useState(new Errors());
 
   const handleSubmit = (event: SyntheticEvent) => {
     event.preventDefault();
-    onSave(project);
+    if (isValid()) {
+      onSave(project);
+    }
   };
 
   const handleChange = (event: any) => {
@@ -28,7 +39,11 @@ function ProjectForm({
       [name]: updatedValue(type as InputType, value, checked),
     };
 
-    setProject((cur) => new Project({ ...cur, ...change }));
+    setProject((cur) => {
+      const updated = new Project({ ...cur, ...change });
+      setErrors(() => validate(updated));
+      return updated;
+    });
   };
 
   const updatedValue = (
@@ -46,6 +61,34 @@ function ProjectForm({
     }
   };
 
+  const validate = (project: Project) => {
+    const errors = new Errors();
+
+    if (project.name.length === 0) {
+      errors.name = "Name is required.";
+    } else if (project.name.length < 3) {
+      errors.name = "Name needs to be at last 3 charactars.";
+    }
+
+    if (project.description.length === 0) {
+      errors.description = "Description is required.";
+    }
+
+    if (project.budget === 0) {
+      errors.budget = "Budget must be more than $0.";
+    }
+
+    return errors;
+  };
+
+  const isValid = () => {
+    return (
+      errors.name.length === 0 &&
+      errors.description.length === 0 &&
+      errors.budget.length === 0
+    );
+  };
+
   return (
     <form onSubmit={handleSubmit} className="input-group vertical">
       <label htmlFor="name">Project Name</label>
@@ -56,6 +99,11 @@ function ProjectForm({
         name="name"
         placeholder="enter name"
       />
+      {errors.name.length > 0 && (
+        <div className="card error">
+          <p>{errors.name}</p>
+        </div>
+      )}
 
       <label htmlFor="description">Project Description</label>
       <textarea
@@ -64,6 +112,11 @@ function ProjectForm({
         name="description"
         placeholder="enter description"
       ></textarea>
+      {errors.description.length > 0 && (
+        <div className="card error">
+          <p>{errors.description}</p>
+        </div>
+      )}
 
       <label htmlFor="budget">Project Budget</label>
       <input
@@ -73,6 +126,11 @@ function ProjectForm({
         name="budget"
         placeholder="enter budget"
       />
+      {errors.budget.length > 0 && (
+        <div className="card error">
+          <p>{errors.budget}</p>
+        </div>
+      )}
 
       <label htmlFor="isActive">Active?</label>
       <input
