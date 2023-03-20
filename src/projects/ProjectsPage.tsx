@@ -32,11 +32,19 @@ function ProjectsPage() {
   }, [currentPage]);
 
   const saveProject = (project: Project) => {
-    const updatedProjects = projects.map((curr) =>
-      curr.id === project.id ? project : curr
-    );
-
-    setProjects(updatedProjects);
+    projectAPI
+      .put(project)
+      .then((updatedProject) => {
+        let updatedProjects = projects.map((p: Project) => {
+          return p.id === project.id ? new Project(updatedProject) : p;
+        });
+        setProjects(updatedProjects);
+      })
+      .catch((e) => {
+        if (e instanceof Error) {
+          setError(e.message);
+        }
+      });
   };
 
   const handleMoreClick = () => {
